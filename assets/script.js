@@ -37,12 +37,12 @@ var questions = [
         correct: "B"
     },
     {
-        question: "Which of the following statements is true about JavaScript's let and const declarations?",
-        choiceA: "Variables declared with `let` are block-scoped, while variables declared with `const` are function-scoped.",
-        choiceB: "Variables declared with `let` are reassignable, while variables declared with `const` are not.",
-        choiceC: " Both `let` and `const` variables can be hoisted to the top of their scope.",
-        choiceD: " `let` and `const` are interchangeable and can be used in the same way.",
-        correct: "B"
+        question: "Which of the following is not a JavaScript data type?",
+        choiceA: "String",
+        choiceB: "Boolean",
+        choiceC: " Float",
+        choiceD: " Undefined",
+        correct: "C"
     }
 ];
 
@@ -68,6 +68,8 @@ function getQuestion() {
         choiceB.style.display = "none";
         choiceC.style.display = "none";
         choiceD.style.display = "none";
+        var viewHighScoresButton = document.getElementById("viewHighScores");
+        viewHighScoresButton.style.display = "block";
     }
 }
 
@@ -135,6 +137,31 @@ function answerIsWrong() {
 function getScore() {
     scoreDiv.style.display = "block";
     finalScore.innerHTML = "Your Final Score: " + correctCount + " out of " + (lastQuestion + 1);
+    var viewHighScoresButton = document.getElementById("viewHighScores");
+    viewHighScoresButton.style.display = "block";
+    saveHighScore();
 }
 
+function saveHighScore() {
+    var userName = prompt("Enter your name:"); // Prompt the user for their name
+    if (userName) {
+        var highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+        var scoreData = { name: userName, score: correctCount };
+        highScores.push(scoreData);
+        highScores.sort(function (a, b) {
+            return b.score - a.score;
+        });
+        localStorage.setItem("highScores", JSON.stringify(highScores));
+        displayHighScores(highScores);
+    }
+}
+
+// Display high scores in the modal
+function showHighScoresModal() {
+    var modal = document.getElementById("high-scores-modal");
+    var highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+    highScoresList.innerHTML = "";
+    displayHighScores(highScores);
+    $(modal).modal("show");
+}
 getQuestion(); // Initial question load
